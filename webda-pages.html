@@ -1,0 +1,36 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="webda-pages">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+  </template>
+
+  <script>
+    /**
+     * `webda-pages`
+     * iron-pages with some animations
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class WebdaPages extends Polymer.Element {
+      static get is() { return 'webda-pages'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'webda-pages'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(WebdaPages.is, WebdaPages);
+  </script>
+</dom-module>
