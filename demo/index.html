@@ -14,6 +14,11 @@
 
     <custom-style>
       <style is="custom-style" include="demo-pages-shared-styles">
+      body {
+        --google-blue-500: #4285f4;
+        --google-red-500: #f44336;
+        --google-green-500: #0f9d58;
+      }
       </style>
     </custom-style>
   </head>
@@ -22,7 +27,62 @@
       <h3>Basic webda-pages demo</h3>
       <demo-snippet>
         <template>
-          <webda-pages></webda-pages>
+          <custom-style>
+            <style is="custom-style">
+              webda-pages {
+                width: 100%;
+                height: 200px;
+                font-size: 50px;
+                color: white;
+                text-align: center;
+              }
+              webda-pages div {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+              }
+              webda-pages div:nth-child(1) {
+                background-color: var(--google-blue-500);
+              }
+              webda-pages div:nth-child(2) {
+                background-color: var(--google-red-500);
+              }
+              webda-pages div:nth-child(3) {
+                background-color: var(--google-green-500);
+              }
+              webda-pages > * {
+                opacity: 0.0;
+                transition: opacity 0.25s;
+                transition-delay: 0s; 
+              }
+              webda-pages > .webda-selected {
+                opacity: 1.0;
+                transition-delay: 0.25s;
+              }
+              button {
+                height: 50px;
+                font-size: 16px;
+              }
+            </style>
+          </custom-style>
+          <button>Click here to change page.</button>
+          <webda-pages display-style="flex" selected="0" animation="fade">
+            <div>One</div>
+            <div>Two</div>
+            <div>Three</div>
+          </webda-pages>
+          <p>
+            To use webda-pages you need to define at least one transition via CSS on the element<br />
+            Take a closer look to those two CSS rules 'webda-pages > *' and 'webda-pages > .webda-selected' you can use them to create the animation you want.
+          </p>
+          <script>
+            var pages = document.querySelector('webda-pages');
+            document.querySelector('button').addEventListener('click', function(e) {
+              pages.selectNext();
+            });
+          </script>
         </template>
       </demo-snippet>
     </div>

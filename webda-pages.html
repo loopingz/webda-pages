@@ -1,4 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../iron-selector/iron-selectable.html">
 
 <dom-module id="webda-pages">
   <template>
@@ -6,8 +8,12 @@
       :host {
         display: block;
       }
+
+      :host > ::slotted(:not(slot):not(.iron-selected)) {
+        
+      }
     </style>
-    <h2>Hello [[prop1]]!</h2>
+    <slot></slot>
   </template>
 
   <script>
@@ -19,15 +25,46 @@
      * @polymer
      * @demo demo/index.html
      */
-    class WebdaPages extends Polymer.Element {
+    class WebdaPages extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior, Polymer.IronSelectableBehavior], Polymer.Element) {
       static get is() { return 'webda-pages'; }
       static get properties() {
         return {
-          prop1: {
+          displayStyle: {
             type: String,
-            value: 'webda-pages'
+            value: 'block'
           }
         };
+      }
+      toggleClasses() {
+        this._old.classList.remove('webda-selected');
+        this._new.classList.add('webda-selected');  
+      }
+      cssListener(evt) {
+        if (this._old) {
+          this._old.style.display = 'none'; 
+        }
+        this._new.style.display = this.displayStyle;
+        // Look like Chrome optimizer will jump to conclusion too quick, so display will be set with the classname preventing the transition
+        setTimeout( this.toggleClasses.bind(this), 1);
+        this._old = this._new;
+        this.removeEventListener('transitionend', this._cssListener);
+      }
+      ready() {
+        super.ready();
+        this._cssListener = this.cssListener.bind(this);
+        this.ignoreNext = false;
+        this.addEventListener('selected-item-changed', (evt) => {
+          if (evt.detail.value) {
+            this._new = evt.detail.value;
+            if (this._old) {
+              this._old.addEventListener('transitionend', this._cssListener);
+              this._old.classList.remove('webda-selected');
+            } else {
+              this._new.classList.add('webda-selected');
+              this._old = this._new;
+            }
+          }
+        });
       }
     }
 
